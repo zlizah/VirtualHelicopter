@@ -3,8 +3,21 @@ guid: b18d67255072a584c802fa705806c209
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
+    100000: //RootNode
+    100002: HH-65C_Dauphin_USCG_Hul2XHi_GearDN
+    100004: Rotor
+    100006: Rotor_Control
+    400000: //RootNode
+    400002: HH-65C_Dauphin_USCG_Hul2XHi_GearDN
+    400004: Rotor
+    400006: Rotor_Control
+    2300000: HH-65C_Dauphin_USCG_Hul2XHi_GearDN
+    2300002: Rotor
+    3300000: HH-65C_Dauphin_USCG_Hul2XHi_GearDN
+    3300002: Rotor
     4300000: HH-65C_Dauphin_USCG_Hul2XHi_GearDN
     4300002: Rotor
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
