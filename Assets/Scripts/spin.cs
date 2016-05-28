@@ -6,6 +6,7 @@ public class spin : MonoBehaviour {
     [SerializeField]
     private Transform target;
     
+
     [SerializeField]
     private float acc = 10.0f;
     
@@ -30,6 +31,7 @@ public class spin : MonoBehaviour {
                     speed = speed + acc * Time.deltaTime;
                 }
             }
+
         } else {
             if(speed > 0) {
                 if(speed + dec * Time.deltaTime <= 0) {
@@ -40,6 +42,6 @@ public class spin : MonoBehaviour {
             }
         }
         
-		target.transform.Rotate(0, 0, speed * Time.deltaTime);
+		target.transform.Rotate(0, 0, -speed * Time.deltaTime);
 	}
 }

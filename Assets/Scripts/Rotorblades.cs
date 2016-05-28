@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RotorbladeSystem : MonoBehaviour {
+public class Rotorblades : MonoBehaviour {
 	//Other constants
 	[SerializeField]
 	private static float rho = 1.225f;
 	[SerializeField]
 	private static float k = 1.0f;
 	[SerializeField]
-	private GameObject target;
+	private GameObject tar;
 
-	static float rotorbladeLength = 11.938f; //meters
+	private static GameObject target;
+
+	static float rotorbladeLength = 11.938f / 2; //meters (radius)
 	static float weight = 4300f; //kg
 	static float initialBladeRotation = -8f; //Degrees
+	static float initialRotorRotation = -90; //Degrees
 	static float bladeWidth = 0.18f; //meters
 	static int nSlices = 36;
 	static float sliceLength = rotorbladeLength / nSlices;
 	//Rotor angularl velocity
-	private float w = 0.0f;
+	private static float w = 0.0f; //Magnitude only (!) Vector is always up..
 
 	private ArrayList rotorblades = new ArrayList ();
 
@@ -31,25 +34,36 @@ public class RotorbladeSystem : MonoBehaviour {
 
 		public void initBlade(Vector3 endPos) {
 			this.endPos = endPos * rotorbladeLength;
-
 			this.transform.localPosition = endPos;
 			for(int i = 0; i < nSlices; ++i) {
 				GameObject s = new GameObject ();
 				s.AddComponent<RotorbladeSlice> ();
-				s.GetComponent<RotorbladeSlice> ().initSlice (i * sliceLength, (i + 1) * sliceLength);
-				s.transform.SetParent(this.transform);
+				RotorbladeSlice rs = s.GetComponent<RotorbladeSlice> ();
+				rs.initSlice (i * sliceLength, (i + 1) * sliceLength);
+				s.transform.SetParent(this.transform); //Setting transform to component
 				slices.Add (s);
 			}
+			this.rotateAngle (new Vector3 (0, Mathf.Deg2Rad *initialRotorRotation, Mathf.Deg2Rad*initialBladeRotation)); //Rotate around y axis (FIX)
 		}
 
 		//Return force for each slice in this rotorblade
 		public float getForce() {
 			float res = 0.0f;
 			for(int i = 0; i < slices.Count; ++i) {
-				RotorbladeSlice s = (RotorbladeSlice) slices [i];
+				RotorbladeSlice s = ((GameObject) slices [i]).GetComponent<RotorbladeSlice> ();
 				res += s.getForce ();
 			}
 			return res;
+		}
+
+		//Important to rotate correctly...
+		public void rotateAngle(Vector3 rot) {
+			this.transform.Rotate(rot);
+		}
+
+		//Needed??
+		public void updateBladePosition(Vector3 pos) {
+			this.transform.position = pos;
 		}
 
 		public class RotorbladeSlice : MonoBehaviour {
@@ -59,18 +73,16 @@ public class RotorbladeSystem : MonoBehaviour {
 			public void initSlice(float sPos, float ePos) {
 				this.area = (ePos - sPos) * bladeWidth; //Kinda the same for evry..
 				this.disToRotor = ePos - (ePos - sPos)/2; //Center of slice
-				this.transform.position = this.getVectorFromRotor(); //?
-				this.transform.Rotate(initialBladeRotation, 0, 0); //Eh..rotate around z or x axis..? Or both..
+				this.transform.localPosition = this.getVectorFromRotor();  //init
 			}
-
 		
-			//UiSlice
-
-
 			//Ui
 			public Vector3 getAirflowVelocity() {
-				Vector3 y = this.getVectorFromRotor();
-				return y; //TODO!!
+	
+				Vector3 wVector = this.transform.parent.up * w;
+				Vector3 y = this.getVectorFromRotor ();
+				Vector3 ubody = target.GetComponent<Rigidbody> ().velocity; //Not sure about this one
+				return ubody + Vector3.Cross(y, wVector); 
 			}
 
 			//Normal
@@ -79,7 +91,7 @@ public class RotorbladeSystem : MonoBehaviour {
 				Vector3 b = a + new Vector3(sliceLength / 2, 0.0f, bladeWidth / 2);
 				Vector3 c = a  + new Vector3(sliceLength / 2, 0.0f, -bladeWidth / 2);
 				Vector3 perp = Vector3.Cross(b-a, c-a);
-				return perp.normalized; //Normalized normal.. HAH!
+				return perp.normalized; 
 			}
 
 			//Size
@@ -89,17 +101,11 @@ public class RotorbladeSystem : MonoBehaviour {
 
 			//Rotor - slice direction (yi)
 			public Vector3 getVectorFromRotor() {
-				return this.transform.parent.localPosition * disToRotor; //Correct?
+				return this.transform.localPosition * disToRotor; 
 			}
-
-			//Change vector from rotor (vinkelhasitghet och avstånd till rotorn) - ropas innan kraften beräknas
-			public void updateSlicePosition() {
-			}
-
-			//Change internal angle of attack
-			public void updateAngle() {
-			}
-
+				
+			
+			//Fi
 			public float getForce() {
 				float a = Vector3.Dot (rho * this.getAirflowVelocity (), this.getNormal());
 				float b = Vector3.Dot (a * this.getArea () * this.getAirflowVelocity (), this.getNormal ());
@@ -110,42 +116,14 @@ public class RotorbladeSystem : MonoBehaviour {
 
 	}
 
+	//Rotate all blades on the z axis with the specified amount.
+	public void rotateBlades(float amount) {
 
-	// Use this for initialization
-	void Start () {
-		GameObject r1 = new GameObject ();
-		Rotorblade r1b = r1.AddComponent <Rotorblade> ();
-		r1b.initBlade(new Vector3 (0, 0, 1));
-
-		GameObject r2 = new GameObject ();
-		Rotorblade r2b = r2.AddComponent <Rotorblade> ();
-		r2b.initBlade(new Vector3 (1, 0, 0));
-
-		GameObject r3 = new GameObject ();
-		Rotorblade r3b = r3.AddComponent <Rotorblade> ();
-		r3b.initBlade(new Vector3 (0, 0, -1));
-
-		GameObject r4 = new GameObject ();
-		Rotorblade r4b = r4.AddComponent <Rotorblade> ();
-		r4b.initBlade(new Vector3 (-1, 0, 0));
-
-		rotorblades.Add (r1);
-		rotorblades.Add (r2);
-		rotorblades.Add (r3);
-		rotorblades.Add (r4);
-		//Todo: Set parent to target..?
-	}
-
-	// Update is called once per frame
-	void Update () {
-		float dT = Time.deltaTime;
-		//update w
-		float forceMag = 0.0f;
 		for (int i = 0; i < rotorblades.Count; ++i) {
-			Rotorblade rb = (Rotorblade)rotorblades [i];
-			forceMag += rb.getForce ();
+			GameObject b = (GameObject)rotorblades [i];
+			Rotorblade rb = b.GetComponent<Rotorblade> ();
+			rb.rotateAngle (new Vector3 (amount, 0, 0)); //z x y
 		}
-		target.GetComponent<Rigidbody> ().AddForce (target.transform.up * forceMag); //Should be correct
 	}
 
 	// Tilt helicopter which affects normal
@@ -153,5 +131,35 @@ public class RotorbladeSystem : MonoBehaviour {
 		//TODO
 	}
 
+	// Use this for initialization
+	Vector3[] heliPos = {new Vector3(0,0,1), new Vector3(1,0,0), new Vector3(0,0,-1), new Vector3(-1, 0,0)};
+	void Start () {
+		target = tar;
+		for (int i = 0; i < heliPos.Length; ++i) {
+			GameObject r = new GameObject ();
+			Rotorblade rb = r.AddComponent <Rotorblade> ();
+			rb.initBlade(heliPos[i]);
+		//	rb.transform.SetParent (this); //Setting component parent = setting gameobject parent
+			rotorblades.Add (r);
+		}
+	}
+		
+	// Update is called once per frame
+	void Update () {
+		float dT = Time.deltaTime;
+		//update w
+
+		float forceMag = 0.0f;
+		for (int i = 0; i < rotorblades.Count; ++i) {
+			GameObject g = (GameObject)rotorblades [i];
+			Rotorblade rb = g.GetComponent<Rotorblade> ();
+			forceMag += rb.getForce ();
+		}
+	
+		target.GetComponent<Rigidbody> ().AddForce (target.transform.up * forceMag); //Should be correct
+	}
+
+
 
 }
+
