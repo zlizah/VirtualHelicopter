@@ -172,11 +172,11 @@ public class Rotorblades : MonoBehaviour {
 		target.transform.Rotate(tiltRotations);
 
 		if (Input.GetKey (KeyCode.A)) {
-			target.transform.Rotate (0, 10 * dT, 0);
+			target.transform.Rotate (0, -40 * dT, 0);
 		//	rotateBlades(new Vector3 (0, 0, 10 * dT));
 				
 		} else if (Input.GetKey (KeyCode.D)) {
-			target.transform.Rotate (0, -10 * dT, 0);
+			target.transform.Rotate (0, 40 * dT, 0);
 		//	rotateBlades(new Vector3 (0, 0, -10 * dT));
 		}
 
