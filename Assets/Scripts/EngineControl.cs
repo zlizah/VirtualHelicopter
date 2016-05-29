@@ -58,4 +58,8 @@ public class EngineControl : MonoBehaviour {
 			* Math.Pow((double)ROTORBLADE_DIAMETER, 4) 
 			) / 16.0f;
 	}
+
+	public float getThrust() {
+		return thrust_level;
+	}
 }

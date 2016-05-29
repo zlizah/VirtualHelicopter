@@ -182,7 +182,7 @@ public class Rotorblades : MonoBehaviour {
 		}
 
 		spin spinner = target.GetComponent<spin> ();
-		Vector3 rotorSpin = spinner.spinRotor (w, dT);
+		Vector3 rotorSpin = spinner.spinRotor (w, ec.getThrust());
 		var rotor = target.transform.Find ("Rotor_Control");
 		print ("ROTATING... " + rotorSpin);
 		rotor.transform.Rotate (rotorSpin);
