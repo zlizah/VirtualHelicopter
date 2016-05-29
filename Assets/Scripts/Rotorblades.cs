@@ -134,6 +134,14 @@ public class Rotorblades : MonoBehaviour {
 	// Use this for initialization
 	Vector3[] heliPos = {new Vector3(1,0,0), new Vector3(0,0,-1), new Vector3(-1, 0,0),  new Vector3(0,0,1)};
 
+
+	void rotateBlades(Vector3 rot) {
+		for (int i = 0; i < rotorblades.Count; ++i) {
+			GameObject go = (GameObject) rotorblades [i];
+			Rotorblade rbb = go.GetComponent<Rotorblade> ();
+			rbb.rotateAngle (rot);
+		}
+	}
 	void Start () {
 		target = tar;
 		for (int i = 0; i < heliPos.Length; ++i) {
@@ -141,7 +149,7 @@ public class Rotorblades : MonoBehaviour {
 			Rotorblade rb = r.AddComponent <Rotorblade> ();
 			rb.initBlade(heliPos[i], i);
 			//r.transform.SetParent (this.transform); //Setting component parent = setting gameobject parent
-
+			//r.transform.SetParent(target.transform);
 			rotorblades.Add (r);
 		}
 		target.AddComponent<EngineControl> ();
@@ -157,19 +165,11 @@ public class Rotorblades : MonoBehaviour {
 
 		if (Input.GetKey (KeyCode.A)) {
 			target.transform.Rotate (0, 10 * dT, 0);
-			for (int i = 0; i < rotorblades.Count; ++i) {
-				GameObject go = (GameObject) rotorblades [i];
-				Rotorblade rbb = go.GetComponent<Rotorblade> ();
-				rbb.rotateAngle (new Vector3(0, 0, 10 * dT));
-			}
+		//	rotateBlades(new Vector3 (0, 0, 10 * dT));
 				
 		} else if (Input.GetKey (KeyCode.D)) {
 			target.transform.Rotate (0, -10 * dT, 0);
-			for (int i = 0; i < rotorblades.Count; ++i) {
-				GameObject go = (GameObject) rotorblades [i];
-				Rotorblade rbb = go.GetComponent<Rotorblade> ();
-				rbb.rotateAngle (new Vector3(0, 0, -10 * dT));
-			}
+		//	rotateBlades(new Vector3 (0, 0, -10 * dT));
 		}
 
 		float forceMag = 0.0f;
