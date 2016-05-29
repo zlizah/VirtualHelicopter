@@ -43,7 +43,7 @@ public class EngineControl : MonoBehaviour {
 
 	//Huvudberäkning float UpdateAngularVelocity(float dt, int enginePercent, float oldAngularVelocity)
 	public float currentAngularVelocity(float prevAngularVelocity) {
-		print ("Curent engine thrust: " + thrust_level);
+	//	print ("Curent engine thrust: " + thrust_level);
 		float airResistance = 2 * currentAirResistance(prevAngularVelocity);
 		return prevAngularVelocity + ((ENGINE_MAX_EFFECT * thrust_level / prevAngularVelocity) - airResistance) * currentDT / INERTIA;
 	}

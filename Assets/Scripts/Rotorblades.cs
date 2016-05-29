@@ -184,7 +184,7 @@ public class Rotorblades : MonoBehaviour {
 		spin spinner = target.GetComponent<spin> ();
 		Vector3 rotorSpin = spinner.spinRotor (w, ec.getThrust());
 		var rotor = target.transform.Find ("Rotor_Control");
-		print ("ROTATING... " + rotorSpin);
+//		print ("ROTATING... " + rotorSpin);
 		rotor.transform.Rotate (rotorSpin);
 
 		float forceMag = 0.0f;
@@ -193,9 +193,9 @@ public class Rotorblades : MonoBehaviour {
 			Rotorblade rb = g.GetComponent<Rotorblade> ();
 			forceMag += rb.getForce ();
 		}
-		print ("Angular Velocity: " + w);
-		print ("Force size: " + forceMag);
-		print ("Target velocity:" + target.GetComponent<Rigidbody> ().velocity);
+//		print ("Angular Velocity: " + w);
+//		print ("Force size: " + forceMag);
+//		print ("Target velocity:" + target.GetComponent<Rigidbody> ().velocity);
 		target.GetComponent<Rigidbody> ().AddForce (target.transform.up * forceMag); //Should be correct
 	}
 
