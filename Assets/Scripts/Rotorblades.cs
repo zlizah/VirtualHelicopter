@@ -20,7 +20,7 @@ public class Rotorblades : MonoBehaviour {
 	static int nSlices = 36;
 	static float sliceLength = rotorbladeLength / nSlices;
 	//Rotor angularl velocity
-	private static float w = 1.0f; //Magnitude only (!) Vector is always up..
+	private static float w = 0.0001f; //Magnitude only (!) Vector is always up..
 
 	private ArrayList rotorblades = new ArrayList ();
 
@@ -154,6 +154,7 @@ public class Rotorblades : MonoBehaviour {
 		}
 		target.AddComponent<EngineControl> ();
 		target.AddComponent<TiltingControl> ();
+		target.AddComponent<spin> ();
 	}
 		
 	// Update is called once per frame
@@ -179,6 +180,12 @@ public class Rotorblades : MonoBehaviour {
 			target.transform.Rotate (0, 40 * dT, 0);
 		//	rotateBlades(new Vector3 (0, 0, -10 * dT));
 		}
+
+		spin spinner = target.GetComponent<spin> ();
+		Vector3 rotorSpin = spinner.spinRotor (w, dT);
+		var rotor = target.transform.Find ("Rotor_Control");
+		print ("ROTATING... " + rotorSpin);
+		rotor.transform.Rotate (rotorSpin);
 
 		float forceMag = 0.0f;
 		for (int i = 0; i < rotorblades.Count; ++i) {
