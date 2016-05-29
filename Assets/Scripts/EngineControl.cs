@@ -12,9 +12,9 @@ public class EngineControl : MonoBehaviour {
 	private int ROTOR_MASS = 500; //Rotor mass: kg, estimate
 	[SerializeField]
 	private int ROTORBLADE_DIAMETER = 12; 	//Rotor size: meters
-	private float thrust_level = 0; //Current thrust level: 0-100 %
+	private float thrust_level = 0f; //Current thrust level: 0-100 %
 	private int INERTIA = 0; //Total inertia
-	private float currentDT = 0.0;
+	private float currentDT = 0.0f;
 
 	// Use this for initialization
 	public void Start () {
@@ -48,7 +48,7 @@ public class EngineControl : MonoBehaviour {
 
 	//Air resistance template function
 	public float currentAirResistance() {
-		return 0.0;
+		return 0.0f;
 	}
 
 	/*

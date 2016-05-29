@@ -20,7 +20,7 @@ public class Rotorblades : MonoBehaviour {
 	static int nSlices = 36;
 	static float sliceLength = rotorbladeLength / nSlices;
 	//Rotor angularl velocity
-	private static float w = 0.0f; //Magnitude only (!) Vector is always up..
+	private static float w = 1.0f; //Magnitude only (!) Vector is always up..
 
 	private ArrayList rotorblades = new ArrayList ();
 
@@ -34,6 +34,7 @@ public class Rotorblades : MonoBehaviour {
 
 		public void initBlade(Vector3 endPos) {
 			this.endPos = endPos * rotorbladeLength;
+			this.transform.position = target.transform.position;
 			this.transform.localPosition = endPos;
 			for(int i = 0; i < nSlices; ++i) {
 				GameObject s = new GameObject ();
@@ -43,8 +44,10 @@ public class Rotorblades : MonoBehaviour {
 				s.transform.SetParent(this.transform); //Setting transform to component
 				slices.Add (s);
 			}
-			this.rotateAngle (new Vector3 (0, Mathf.Deg2Rad *initialRotorRotation, Mathf.Deg2Rad*initialBladeRotation)); //Rotate around y axis (FIX)
+			//this.rotateAngle (new Vector3 (0, Mathf.Deg2Rad *initialRotorRotation, Mathf.Deg2Rad*initialBladeRotation)); //Rotate around y axis (FIX)
+			this.rotateAngle(new Vector3(-90, 0, 0));
 		}
+
 
 		//Return force for each slice in this rotorblade
 		public float getForce() {
@@ -126,10 +129,7 @@ public class Rotorblades : MonoBehaviour {
 		}
 	}
 
-	// Tilt helicopter which affects normal
-	void updateNormal(Vector3 rotation) {
-		//TODO
-	}
+
 
 	// Use this for initialization
 	Vector3[] heliPos = {new Vector3(0,0,1), new Vector3(1,0,0), new Vector3(0,0,-1), new Vector3(-1, 0,0)};
@@ -140,22 +140,28 @@ public class Rotorblades : MonoBehaviour {
 			Rotorblade rb = r.AddComponent <Rotorblade> ();
 			rb.initBlade(heliPos[i]);
 		//	rb.transform.SetParent (this); //Setting component parent = setting gameobject parent
+
 			rotorblades.Add (r);
 		}
+		target.AddComponent<EngineControl> ();
 	}
 		
 	// Update is called once per frame
 	void Update () {
 		float dT = Time.deltaTime;
-		//update w
 
+		EngineControl ec = target.GetComponent<EngineControl> ();
+		ec.doUpdate (dT);
+		w = ec.currentAngularVelocity (w);
 		float forceMag = 0.0f;
 		for (int i = 0; i < rotorblades.Count; ++i) {
 			GameObject g = (GameObject)rotorblades [i];
 			Rotorblade rb = g.GetComponent<Rotorblade> ();
 			forceMag += rb.getForce ();
 		}
-	
+		print (w);
+		print (forceMag);
+		print ("Target velocity:" + target.GetComponent<Rigidbody> ().velocity);
 		target.GetComponent<Rigidbody> ().AddForce (target.transform.up * forceMag); //Should be correct
 	}
 
