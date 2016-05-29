@@ -32,7 +32,7 @@ public class Rotorblades : MonoBehaviour {
 		//The slices for ths rotorblade
 		ArrayList slices = new ArrayList();
 
-		public void initBlade(Vector3 endPos) {
+		public void initBlade(Vector3 endPos, float rot) {
 			this.endPos = endPos * rotorbladeLength;
 			this.transform.position = target.transform.position;
 			this.transform.localPosition = endPos;
@@ -45,7 +45,7 @@ public class Rotorblades : MonoBehaviour {
 				slices.Add (s);
 			}
 			//this.rotateAngle (new Vector3 (0, Mathf.Deg2Rad *initialRotorRotation, Mathf.Deg2Rad*initialBladeRotation)); //Rotate around y axis (FIX)
-			this.rotateAngle(new Vector3(-90, 0, 0));
+			this.rotateAngle(new Vector3(-98, 90*rot, 0));
 		}
 
 
@@ -132,13 +132,14 @@ public class Rotorblades : MonoBehaviour {
 
 
 	// Use this for initialization
-	Vector3[] heliPos = {new Vector3(0,0,1), new Vector3(1,0,0), new Vector3(0,0,-1), new Vector3(-1, 0,0)};
+	Vector3[] heliPos = {new Vector3(1,0,0), new Vector3(0,0,-1), new Vector3(-1, 0,0),  new Vector3(0,0,1)};
+
 	void Start () {
 		target = tar;
 		for (int i = 0; i < heliPos.Length; ++i) {
 			GameObject r = new GameObject ();
 			Rotorblade rb = r.AddComponent <Rotorblade> ();
-			rb.initBlade(heliPos[i]);
+			rb.initBlade(heliPos[i], i);
 		//	rb.transform.SetParent (this); //Setting component parent = setting gameobject parent
 
 			rotorblades.Add (r);
