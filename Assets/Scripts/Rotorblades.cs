@@ -140,7 +140,7 @@ public class Rotorblades : MonoBehaviour {
 			GameObject r = new GameObject ();
 			Rotorblade rb = r.AddComponent <Rotorblade> ();
 			rb.initBlade(heliPos[i], i);
-		//	rb.transform.SetParent (this); //Setting component parent = setting gameobject parent
+			//r.transform.SetParent (this.transform); //Setting component parent = setting gameobject parent
 
 			rotorblades.Add (r);
 		}
@@ -162,6 +162,23 @@ public class Rotorblades : MonoBehaviour {
 		Vector3 tiltRotations = tc.doUpdate(dT);
 		//RotorBlades.rotateBlades (tiltRotations);
 		target.transform.Rotate(tiltRotations);
+
+		if (Input.GetKey (KeyCode.A)) {
+			target.transform.Rotate (0, 10 * dT, 0);
+			for (int i = 0; i < rotorblades.Count; ++i) {
+				GameObject go = (GameObject) rotorblades [i];
+				Rotorblade rbb = go.GetComponent<Rotorblade> ();
+				rbb.rotateAngle (new Vector3(0, 0, 10 * dT));
+			}
+				
+		} else if (Input.GetKey (KeyCode.D)) {
+			target.transform.Rotate (0, -10 * dT, 0);
+			for (int i = 0; i < rotorblades.Count; ++i) {
+				GameObject go = (GameObject) rotorblades [i];
+				Rotorblade rbb = go.GetComponent<Rotorblade> ();
+				rbb.rotateAngle (new Vector3(0, 0, -10 * dT));
+			}
+		}
 
 		float forceMag = 0.0f;
 		for (int i = 0; i < rotorblades.Count; ++i) {
