@@ -4,7 +4,7 @@ using System.Collections;
 public class Rotorblades : MonoBehaviour {
 	//Other constants
 	[SerializeField]
-	private static float rho = 1.225f;
+	public static float rho = 1.225f;
 	[SerializeField]
 	private static float k = 1.0f;
 	[SerializeField]
@@ -160,8 +160,8 @@ public class Rotorblades : MonoBehaviour {
 			Rotorblade rb = g.GetComponent<Rotorblade> ();
 			forceMag += rb.getForce ();
 		}
-		print (w);
-		print (forceMag);
+		print ("Angular Velocity: " + w);
+		print ("Force size: " + forceMag);
 		print ("Target velocity:" + target.GetComponent<Rigidbody> ().velocity);
 		target.GetComponent<Rigidbody> ().AddForce (target.transform.up * forceMag); //Should be correct
 	}
