@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 /* Source of the mechanics calculations (swedish):
  * http://www.mek.lth.se/fileadmin/mek/Education/FMEA05oFMEA15/formelsamling.pdf
@@ -42,13 +43,20 @@ public class EngineControl : MonoBehaviour {
 
 	//Huvudberäkning float UpdateAngularVelocity(float dt, int enginePercent, float oldAngularVelocity)
 	public float currentAngularVelocity(float prevAngularVelocity) {
-		float airResistance = 2 * currentAirResistance();
+		print ("Curent engine thrust: " + thrust_level);
+		float airResistance = 2 * currentAirResistance(prevAngularVelocity);
 		return prevAngularVelocity + ((ENGINE_MAX_EFFECT * thrust_level / prevAngularVelocity) - airResistance) * currentDT / INERTIA;
 	}
 
 	//Air resistance template function
-	public float currentAirResistance() {
-		return 0.0f;
+	public float currentAirResistance(float angularVelocity) {
+		float cd = 0.02f; //air resistance coefficient, should be based on attack angle
+		float rho = Rotorblades.rho;
+		return (float)(rho * (double)ROTORBLADE_DIAMETER 
+			* cd 
+			* Math.Pow((double)angularVelocity, 2) 
+			* Math.Pow((double)ROTORBLADE_DIAMETER, 4) 
+			) / 16.0f;
 	}
 
 	/*
