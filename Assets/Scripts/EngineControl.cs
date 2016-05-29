@@ -58,22 +58,4 @@ public class EngineControl : MonoBehaviour {
 			* Math.Pow((double)ROTORBLADE_DIAMETER, 4) 
 			) / 16.0f;
 	}
-
-	/*
-	 * Luftmotsåtndsberäkning (air resistance)
-	 * Move to Rotor Blade System once implementation shouldbe done
-	 */
-		/*
-	LUFTMOSTÅNDSKONSTANT = map<vinkel -> motståndskoefficient>
-		//luftmoståndscoefficient - kolla upp modell
-
-	float beräkna_luftmostånd(gamla_w) {
-		CD = average for each slice (LUFTMOSTÅNDSKONSTANT<attack_angle>)
-		//http://www.aerospaceweb.org/question/aerodynamics/q0194.shtml
-		//https://www.google.se/search?q=drag+coefficient+naca+0012&espv=2&biw=1366&bih=643&tbm=isch&imgil=fikXNCXeAk1PjM%253A%253BC0MCFhwRK8o_jM%253Bhttp%25253A%25252F%25252Fwww.aerospaceweb.org%25252Fquestion%25252Fairfoils%25252Fq0259c.shtml&source=iu&pf=m&fir=fikXNCXeAk1PjM%253A%252CC0MCFhwRK8o_jM%252C_&usg=__YQrTMptVVn60a0aubrctPlZw2BE%3D&ved=0ahUKEwjh-LSz1ffMAhUDkSwKHZ1rAGYQyjcIJg&ei=B-JGV6HZF4OisgGd14GwBg#imgrc=fikXNCXeAk1PjM%3A
-
-
-		rho * |bredd_på_rotorblad| * CD * gamla_vinkelhastighet^2 * 
-		|rotorbladsdiameter|^4 / 16
-	} */
 }

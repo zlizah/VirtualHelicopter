@@ -153,15 +153,23 @@ public class Rotorblades : MonoBehaviour {
 			rotorblades.Add (r);
 		}
 		target.AddComponent<EngineControl> ();
+		target.AddComponent<TiltingControl> ();
 	}
 		
 	// Update is called once per frame
 	void Update () {
 		float dT = Time.deltaTime;
 
+		//Engine
 		EngineControl ec = target.GetComponent<EngineControl> ();
 		ec.doUpdate (dT);
 		w = ec.currentAngularVelocity (w);
+
+		//Tilting
+		TiltingControl tc = target.GetComponent<TiltingControl> ();
+		Vector3 tiltRotations = tc.doUpdate(dT);
+		//RotorBlades.rotateBlades (tiltRotations);
+		target.transform.Rotate(tiltRotations);
 
 		if (Input.GetKey (KeyCode.A)) {
 			target.transform.Rotate (0, 10 * dT, 0);
