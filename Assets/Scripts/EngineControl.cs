@@ -8,7 +8,7 @@ using System;
  */
 public class EngineControl : MonoBehaviour {
 	[SerializeField]
-	private int ENGINE_MAX_EFFECT = 1016; //Engine Max Effect, both engines combined: kW
+	private int ENGINE_MAX_EFFECT = 100000; //Engine Max Effect, both engines combined: kW
 	[SerializeField]
 	private int ROTOR_MASS = 500; //Rotor mass: kg, estimate
 	[SerializeField]
@@ -16,6 +16,7 @@ public class EngineControl : MonoBehaviour {
 	private float thrust_level = 0f; //Current thrust level: 0-100 %
 	private int INERTIA = 0; //Total inertia
 	private float currentDT = 0.0f;
+	private float realism_constant = 0.1f;
 
 	// Use this for initialization
 	public void Start () {
@@ -28,16 +29,20 @@ public class EngineControl : MonoBehaviour {
 		currentDT = dt;
 
 		// Check for engine increase and decrease
-		if (Input.GetKey(KeyCode.W)) {
-			thrust_level += dt * 50;
-			if (thrust_level > 100) {
-				thrust_level = 100;
+		if (TiltingControl.inputSelector == 0) {
+			if (Input.GetKey (KeyCode.W)) {
+				thrust_level += dt * 50;
+				if (thrust_level > 100) {
+					thrust_level = 100;
+				}
+			} else if (Input.GetKey (KeyCode.S)) {
+				thrust_level -= dt * 50;
+				if (thrust_level < 0) {
+					thrust_level = 0;
+				}
 			}
-		} else if (Input.GetKey(KeyCode.S)) {
-			thrust_level -= dt * 50;
-			if (thrust_level < 0) {
-				thrust_level = 0;
-			}
+		} else {
+			thrust_level = ((Input.GetAxisRaw ("Engine-Axis") + 1) * 50);
 		}
 	}
 
@@ -45,7 +50,7 @@ public class EngineControl : MonoBehaviour {
 	public float currentAngularVelocity(float prevAngularVelocity) {
 	//	print ("Curent engine thrust: " + thrust_level);
 		float airResistance = 2 * currentAirResistance(prevAngularVelocity);
-		return prevAngularVelocity + ((ENGINE_MAX_EFFECT * thrust_level / prevAngularVelocity) - airResistance) * currentDT / INERTIA;
+		return prevAngularVelocity + ((ENGINE_MAX_EFFECT * thrust_level / (100 * prevAngularVelocity)) - airResistance) * currentDT / INERTIA;
 	}
 
 	//Air resistance template function

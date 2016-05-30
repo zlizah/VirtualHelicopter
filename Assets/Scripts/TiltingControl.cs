@@ -4,6 +4,8 @@ using System.Collections;
 public class TiltingControl : MonoBehaviour {
 	[SerializeField]
 	private Vector2 currentTilt = new Vector2(0.0f, 0.0f);
+	[SerializeField]
+	public static int inputSelector = 1;
 
 	// Use this for initialization
 	void Start () {
@@ -11,17 +13,27 @@ public class TiltingControl : MonoBehaviour {
 	
 	// Update call
 	public Vector3 doUpdate(float dt) {
-		//Detect tilt input via mouse
-		float h = Input.GetAxis("Mouse X");
-		float v = Input.GetAxis("Mouse Y");
+		float h = 0.0f;
+		float v = 0.0f;
+		float scaleFactor = 0.0f;
+		if (inputSelector == 0) {
+			//Detect tilt input via mouse
+			h = Input.GetAxis ("Mouse X");
+			v = Input.GetAxis ("Mouse Y");
+			scaleFactor = 0.1f;
+		} else {
+			h = Input.GetAxis ("X-Axis");
+			v = Input.GetAxis ("Y-Axis");
+			scaleFactor = 0.3f;
+		}
 		Vector2 deltaVec = new Vector2 (v, h);
 
 		Vector2 newVec = currentTilt + deltaVec;
 		if (newVec.magnitude > 1.0f) {
-			newVec.Normalize();
+			newVec.Normalize ();
 		}
 		currentTilt = newVec;
 
-		return new Vector3(0.1f * currentTilt.x, 0.0f, 0.1f * currentTilt.y);
+		return new Vector3 (scaleFactor * currentTilt.x, 0.0f, scaleFactor * currentTilt.y);
 	}
 }

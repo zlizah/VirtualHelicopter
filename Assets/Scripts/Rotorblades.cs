@@ -168,17 +168,22 @@ public class Rotorblades : MonoBehaviour {
 
 		//Tilting
 		TiltingControl tc = target.GetComponent<TiltingControl> ();
-		Vector3 tiltRotations = tc.doUpdate(dT);
+		Vector3 tiltRotations = tc.doUpdate (dT);
 		//RotorBlades.rotateBlades (tiltRotations);
-		target.transform.Rotate(tiltRotations);
+		target.transform.Rotate (tiltRotations);
 
-		if (Input.GetKey (KeyCode.A)) {
-			target.transform.Rotate (0, -40 * dT, 0);
-		//	rotateBlades(new Vector3 (0, 0, 10 * dT));
-				
-		} else if (Input.GetKey (KeyCode.D)) {
-			target.transform.Rotate (0, 40 * dT, 0);
-		//	rotateBlades(new Vector3 (0, 0, -10 * dT));
+		//Z-rotation
+		if (TiltingControl.inputSelector == 0) {
+			if (Input.GetKey (KeyCode.A)) {
+				target.transform.Rotate (0, -40 * dT, 0);
+				//	rotateBlades(new Vector3 (0, 0, 10 * dT));
+							
+			} else if (Input.GetKey (KeyCode.D)) {
+				target.transform.Rotate (0, 40 * dT, 0);
+				//	rotateBlades(new Vector3 (0, 0, -10 * dT));
+			}
+		} else {
+			target.transform.Rotate (0, 40 * dT * Input.GetAxisRaw("Z-Axis"), 0);
 		}
 
 		spin spinner = target.GetComponent<spin> ();
