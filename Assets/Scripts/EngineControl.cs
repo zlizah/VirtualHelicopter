@@ -8,7 +8,7 @@ using System;
  */
 public class EngineControl : MonoBehaviour {
 	[SerializeField]
-	private int ENGINE_MAX_EFFECT = 50000; //Engine Max Effect, both engines combined: kW
+	private int ENGINE_MAX_EFFECT = 25000; //Engine Max Effect, both engines combined: kW
 	[SerializeField]
 	private int ROTOR_MASS = 500; //Rotor mass: kg, estimate
 	[SerializeField]
