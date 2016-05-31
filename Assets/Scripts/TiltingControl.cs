@@ -5,7 +5,7 @@ public class TiltingControl : MonoBehaviour {
 	[SerializeField]
 	private Vector2 currentTilt = new Vector2(0.0f, 0.0f);
 	[SerializeField]
-	public static int inputSelector = 1;
+	public static int inputSelector = 0; //Selector for joystick input (1) or keyboard/mouse (0)
 
 	// Use this for initialization
 	void Start () {
